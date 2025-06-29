@@ -23,6 +23,7 @@ typedef struct
 
 typedef struct
 {
+    uint16_t origin;
     label_t labels[MAX_LABELS];
     int label_count;
     instruction_t instructions[MAX_INSTRUCTIONS];

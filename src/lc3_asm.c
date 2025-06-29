@@ -140,7 +140,7 @@ void second_pass(program_t *program, FILE *file)
 }
 
 // Write object file
-void write_object_file(program_t *program, const char *filename, uint16_t origin)
+void write_object_file(program_t *program, const char *filename)
 {
     FILE *file = fopen(filename, "wb");
     if (!file)
@@ -150,7 +150,7 @@ void write_object_file(program_t *program, const char *filename, uint16_t origin
     }
 
     // Write origin (big-endian)
-    uint16_t origin_be = (origin << 8) | (origin >> 8);
+    uint16_t origin_be = (program->origin << 8) | (program->origin >> 8);
     fwrite(&origin_be, sizeof(uint16_t), 1, file);
 
     // Write instructions (big-endian)
@@ -207,7 +207,7 @@ int lc3_asm_run(const char *input_filename)
 
     // Write output file
     const char *output_filename = lc3_asm_get_output_filename(input_filename);
-    write_object_file(program, output_filename, 0x3000);
+    write_object_file(program, output_filename);
 
     printf("Assembly complete!\n");
     return 0;
