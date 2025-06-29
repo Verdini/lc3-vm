@@ -6,7 +6,9 @@
     "C_Cpp.clang_format_style": "{ BasedOnStyle: LLVM, IndentWidth: 4, UseTab: Never, BreakBeforeBraces: Allman, AllowShortIfStatementsOnASingleLine: false, IndentCaseLabels: false, ColumnLimit: 100, AccessModifierOffset: -4 }",
     "files.associations": {
         "*.h": "c",
-        "*.c": "c"
+        "*.c": "c",
+        "compare": "c",
+        "cstdint": "c"
     },
     "editor.formatOnSave": true,
     "editor.insertSpaces": true,
