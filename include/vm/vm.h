@@ -1,5 +1,5 @@
-#ifndef LC3_H
-#define LC3_H
+#ifndef VM_H
+#define VM_H
 
 #include <stdbool.h>
 #include <stdint.h>
@@ -80,10 +80,10 @@ typedef struct
 } lc3_vm_t;
 
 // Function declarations
-void lc3_vm_init(lc3_vm_t *vm);
-bool lc3_vm_load_program(lc3_vm_t *vm, const char *filename);
-void lc3_vm_run(lc3_vm_t *vm);
-void lc3_vm_shutdown(lc3_vm_t *vm);
+void vm_init(lc3_vm_t *vm);
+bool vm_load_program(lc3_vm_t *vm, const char *filename);
+void vm_run(lc3_vm_t *vm);
+void vm_shutdown(lc3_vm_t *vm);
 
 // Utility functions
 void lc3_update_flags(lc3_vm_t *vm, uint16_t r);
@@ -108,4 +108,4 @@ void lc3_exec_sti(lc3_vm_t *vm, uint16_t instr);
 void lc3_exec_str(lc3_vm_t *vm, uint16_t instr);
 void lc3_exec_trap(lc3_vm_t *vm, uint16_t instr);
 
-#endif // LC3_H
+#endif // VM_H

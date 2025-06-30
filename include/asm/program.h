@@ -1,5 +1,5 @@
-#ifndef LC3_ASM_PROGRAM_H
-#define LC3_ASM_PROGRAM_H
+#ifndef PROGRAM_H
+#define PROGRAM_H
 
 #include <stdint.h>
 
@@ -31,8 +31,8 @@ typedef struct
     uint16_t current_address;
 } program_t;
 
-program_t *lc3_program_create();
-int lc3_program_find_label(program_t *program, const char *label_name);
-void lc3_program_add_label(program_t *program, const char *name);
+program_t *program_create();
+int program_find_label(program_t *program, const char *label_name);
+void program_add_label(program_t *program, const char *name);
 
-#endif // LC3_ASM_PROGRAM_H
+#endif // PROGRAM_H

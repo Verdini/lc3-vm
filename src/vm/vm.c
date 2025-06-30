@@ -1,4 +1,4 @@
-#include "../include/lc3.h"
+#include "../../include/vm/vm.h"
 #include <fcntl.h>
 #include <signal.h>
 #include <stdint.h>
@@ -11,7 +11,7 @@
 #include <sys/types.h>
 #include <unistd.h>
 
-void lc3_vm_init(lc3_vm_t *vm)
+void vm_init(lc3_vm_t *vm)
 {
     // Clear memory
     memset(vm->memory, 0, sizeof(vm->memory));
@@ -31,7 +31,7 @@ void lc3_vm_init(lc3_vm_t *vm)
     printf("LC-3 VM initialized\n");
 }
 
-bool lc3_vm_load_program(lc3_vm_t *vm, const char *filename)
+bool vm_load_program(lc3_vm_t *vm, const char *filename)
 {
     FILE *file = fopen(filename, "rb");
     if (!file)
@@ -60,7 +60,7 @@ bool lc3_vm_load_program(lc3_vm_t *vm, const char *filename)
     return true;
 }
 
-void lc3_vm_run(lc3_vm_t *vm)
+void vm_run(lc3_vm_t *vm)
 {
     while (vm->running)
     {
@@ -125,7 +125,7 @@ void lc3_vm_run(lc3_vm_t *vm)
     }
 }
 
-void lc3_vm_shutdown(lc3_vm_t *vm)
+void vm_shutdown(lc3_vm_t *vm)
 {
     vm->running = false;
     printf("LC-3 VM shutdown\n");

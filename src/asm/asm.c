@@ -1,5 +1,5 @@
-#include "../include/lc3_asm_parser.h"
-#include "../include/lc3_program.h"
+#include "../../include/asm/parser.h"
+#include "../../include/asm/program.h"
 #include <ctype.h>
 #include <stdint.h>
 #include <stdio.h>
@@ -56,7 +56,7 @@ void first_pass(program_t *program, FILE *file)
         if (colon)
         {
             *colon = '\0'; // Remove colon
-            lc3_program_add_label(program, line);
+            program_add_label(program, line);
 
             // Check if there's an instruction on the same line
             char *rest = colon + 1;
@@ -165,7 +165,7 @@ void write_object_file(program_t *program, const char *filename)
     printf("Generated %s with %d instructions\n", filename, program->instruction_count);
 }
 
-char *lc3_asm_get_output_filename(const char *input_filename)
+char *asm_get_output_filename(const char *input_filename)
 {
     // Create output filename by replacing .asm with .obj
     static char output_filename[256];
@@ -182,7 +182,7 @@ char *lc3_asm_get_output_filename(const char *input_filename)
     return output_filename;
 }
 
-int lc3_asm_run(const char *input_filename)
+int asm_run(const char *input_filename)
 {
     FILE *input_file = fopen(input_filename, "r");
     if (!input_file)
@@ -194,7 +194,7 @@ int lc3_asm_run(const char *input_filename)
     printf("Assembling %s...\n", input_filename);
 
     // Reset global state
-    program_t *program = lc3_program_create();
+    program_t *program = program_create();
 
     // Two-pass assembly
     printf("Pass 1: Collecting labels...\n");
@@ -206,7 +206,7 @@ int lc3_asm_run(const char *input_filename)
     fclose(input_file);
 
     // Write output file
-    const char *output_filename = lc3_asm_get_output_filename(input_filename);
+    const char *output_filename = asm_get_output_filename(input_filename);
     write_object_file(program, output_filename);
 
     printf("Assembly complete!\n");

@@ -9,8 +9,8 @@ BINDIR = bin
 DEBUG_BINDIR = $(BINDIR)/debug
 RELEASE_BINDIR = $(BINDIR)/release
 
-# Find all .c files in src directory
-SOURCES = $(wildcard $(SRCDIR)/*.c)
+# Find all .c files in src directory and subdirectories
+SOURCES = $(shell find $(SRCDIR) -name "*.c")
 OBJECTS = $(SOURCES:$(SRCDIR)/%.c=$(OBJDIR)/%.o)
 DEBUG_OBJECTS = $(SOURCES:$(SRCDIR)/%.c=$(OBJDIR)/debug/%.o)
 RELEASE_OBJECTS = $(SOURCES:$(SRCDIR)/%.c=$(OBJDIR)/release/%.o)
@@ -33,11 +33,13 @@ $(RELEASE_BINDIR)/$(TARGET): $(RELEASE_OBJECTS) | $(RELEASE_BINDIR)
 	$(CC) $(CFLAGS) $(RELEASE_FLAGS) $^ -o $@
 
 # Debug object files
-$(OBJDIR)/debug/%.o: $(SRCDIR)/%.c | $(OBJDIR)/debug
+$(OBJDIR)/debug/%.o: $(SRCDIR)/%.c
+	@mkdir -p $(dir $@)
 	$(CC) $(CFLAGS) -c $< -o $@
 
 # Release object files
-$(OBJDIR)/release/%.o: $(SRCDIR)/%.c | $(OBJDIR)/release
+$(OBJDIR)/release/%.o: $(SRCDIR)/%.c
+	@mkdir -p $(dir $@)
 	$(CC) $(CFLAGS) $(RELEASE_FLAGS) -c $< -o $@
 
 # Create directories
@@ -68,7 +70,7 @@ valgrind: debug
 
 # Format code
 format:
-	find $(SRCDIR) -name "*.c" -o -name "*.h" | xargs clang-format -i
+	find $(SRCDIR) include examples -name "*.c" -o -name "*.h" | xargs clang-format -i
 
 # Run tests (if you add them later)
 test: debug

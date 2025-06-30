@@ -1,5 +1,5 @@
-#ifndef LC3_ASM_PARSER_H
-#define LC3_ASM_PARSER_H
+#ifndef PARSER_H
+#define PARSER_H
 
 #include <stdint.h>
 
