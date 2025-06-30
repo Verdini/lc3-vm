@@ -3,7 +3,7 @@
     "C_Cpp.default.cppStandard": "c++17",
     "C_Cpp.default.intelliSenseMode": "linux-gcc-x64",
     "C_Cpp.default.compilerPath": "/usr/bin/gcc",
-    "C_Cpp.clang_format_style": "{ BasedOnStyle: LLVM, IndentWidth: 4, UseTab: Never, BreakBeforeBraces: Allman, AllowShortIfStatementsOnASingleLine: false, IndentCaseLabels: false, ColumnLimit: 100, AccessModifierOffset: -4 }",
+    "C_Cpp.clang_format_style": "Google",
     "files.associations": {
         "*.h": "c",
         "*.c": "c",
@@ -11,13 +11,6 @@
         "cstdint": "c"
     },
     "editor.formatOnSave": true,
-    "editor.insertSpaces": true,
-    "editor.tabSize": 4,
-    "editor.detectIndentation": false,
-    "editor.rulers": [
-        80,
-        100
-    ],
     "editor.wordWrap": "wordWrapColumn",
     "editor.wordWrapColumn": 100,
     "files.trimTrailingWhitespace": true,

@@ -28,8 +28,9 @@ typedef struct {
   uint16_t current_address;
 } program_t;
 
-program_t *program_create();
-int program_find_label(program_t *program, const char *label_name);
-void program_add_label(program_t *program, const char *name);
+program_t* program_create();
+void program_destroy(program_t* program);
+int program_find_label(program_t* program, const char* label_name);
+void program_add_label(program_t* program, const char* name);
 
-#endif // PROGRAM_H
+#endif  // PROGRAM_H

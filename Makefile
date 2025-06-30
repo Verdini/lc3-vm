@@ -55,25 +55,25 @@ $(DEBUG_BINDIR):
 $(RELEASE_BINDIR):
 	mkdir -p $(RELEASE_BINDIR)
 
-# Clean build files
-clean:
-	rm -rf $(OBJDIR) $(BINDIR)
-
 # Install dependencies
 install-deps:
 	sudo apt update
 	sudo apt install -y build-essential gdb valgrind clang-format
 
-# Run with valgrind
-valgrind: debug
-	valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes --verbose --log-file=valgrind-out.txt $(DEBUG_BINDIR)/$(TARGET)
+# Clean build files
+clean:
+	rm -rf $(OBJDIR) $(BINDIR)
 
 # Format code
 format:
-	find $(SRCDIR) include examples -name "*.c" -o -name "*.h" | xargs clang-format -i
+	find $(SRCDIR) include examples -name "*.c" -o -name "*.h" | xargs clang-format -i --style=Google
 
 # Run tests (if you add them later)
 test: debug
 	@echo "No tests configured yet"
 
-.PHONY: all debug release clean install-deps valgrind format test
+# Run with valgrind
+valgrind: debug
+	valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes --verbose --log-file=valgrind-out.txt $(DEBUG_BINDIR)/$(TARGET)
+
+.PHONY: all debug release install-deps clean format test valgrind

@@ -1,10 +1,11 @@
-#include "../include/asm/asm.h"
-#include "../include/vm/vm.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-void run_assembler(const char *input_filename) {
+#include "../include/asm/asm.h"
+#include "../include/vm/vm.h"
+
+void run_assembler(const char* input_filename) {
   int result = asm_run(input_filename);
   if (result != 0) {
     fprintf(stderr, "Assembly failed!\n");
@@ -12,7 +13,7 @@ void run_assembler(const char *input_filename) {
   }
 }
 
-int run_vm(const char *program_filename) {
+int run_vm(const char* program_filename) {
   lc3_vm_t vm;
 
   vm_init(&vm);
@@ -34,7 +35,7 @@ int run_vm(const char *program_filename) {
   return 0;
 }
 
-int main(int argc, char *argv[]) {
+int main(int argc, char* argv[]) {
   // Check for assembler flag
   // lc3_vm -c <input.asm> for assembler only
   if (argc == 3 && strcmp(argv[1], "-c") == 0) {
@@ -52,7 +53,7 @@ int main(int argc, char *argv[]) {
     printf("Assembly complete.\n\n");
 
     // Generate object filename by replacing .asm with .obj
-    char *obj_filename = asm_get_output_filename(argv[2]);
+    char* obj_filename = asm_get_output_filename(argv[2]);
 
     printf("Running '%s'...\n", obj_filename);
     return run_vm(obj_filename);

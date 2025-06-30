@@ -3,7 +3,7 @@
 
 #include <stdint.h>
 
-int parse_number(const char *str);
-uint16_t parse_instruction(char *line);
+int parse_number(const char* str);
+uint16_t parse_instruction(char* line);
 
 #endif
