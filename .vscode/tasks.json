@@ -26,6 +26,23 @@
             "options": {
                 "cwd": "${workspaceFolder}"
             },
+        },
+        {
+            "label": "[Debug] Compile and run current C file",
+            "type": "shell",
+            "command": "gcc",
+            "args": [
+                "-g",
+                "${relativeFile}",
+                "-o",
+                "${workspaceFolder}/bin/debug/${fileBasenameNoExtension}",
+                "&&",
+                "${workspaceFolder}/bin/debug/${fileBasenameNoExtension}"
+            ],
+            "group": "test",
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
         }
     ],
 }
