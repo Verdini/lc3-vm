@@ -24,8 +24,8 @@ TRAP x21
 ; Halt the program
 TRAP x25
 
-HELLO_STR .STRINGZ "Hello, LC-3!"
-NEWLINE   .FILL x000A   ; ASCII newline character
-NUMBER    .FILL x0041   ; ASCII 'A' character
+HELLO_STR: .STRINGZ "Hello, LC-3!"
+NEWLINE:   .FILL x000A   ; ASCII newline character
+NUMBER:    .FILL x0041   ; ASCII 'A' character
 
 .END
