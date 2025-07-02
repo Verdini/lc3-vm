@@ -112,30 +112,6 @@ void parse_instructions(program_t* program, FILE* file) {
   }
 }
 
-// Write object file
-void write_object_file(program_t* program, const char* filename) {
-  FILE* file = fopen(filename, "wb");
-  if (!file) {
-    fprintf(stderr, "Error: Could not create output file %s\n", filename);
-    return;
-  }
-
-  // Write origin (big-endian)
-  uint16_t origin_be = (program->origin << 8) | (program->origin >> 8);
-  fwrite(&origin_be, sizeof(uint16_t), 1, file);
-
-  // Write instructions (big-endian)
-  for (int i = 0; i < program->instruction_count; i++) {
-    uint16_t instr_be = (program->instructions[i].instruction << 8) |
-                        (program->instructions[i].instruction >> 8);
-    fwrite(&instr_be, sizeof(uint16_t), 1, file);
-  }
-
-  fclose(file);
-  printf("Generated %s with %d instructions\n", filename,
-         program->instruction_count);
-}
-
 char* asm_get_output_filename(const char* input_filename) {
   // Create output filename by replacing .asm with .obj
   static char output_filename[256];
@@ -173,7 +149,7 @@ int asm_run(const char* input_filename) {
   // Write output file
   printf("Writing to file...\n");
   const char* output_filename = asm_get_output_filename(input_filename);
-  write_object_file(program, output_filename);
+  program_write_file(program, output_filename);
 
   program_destroy(program);
 

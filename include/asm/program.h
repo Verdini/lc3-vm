@@ -39,4 +39,6 @@ int program_find_address(program_t* program, const char* label_name);
 void program_add_instruction(program_t* program, uint16_t instruction,
                              uint16_t address);
 
+void program_write_file(program_t* program, const char* filename);
+
 #endif  // PROGRAM_H
