@@ -21,8 +21,9 @@ void clean_line(char* line) {
 }
 
 // First pass: collect labels and calculate addresses
-void first_pass(program_t* program, FILE* file) {
+void parse_addresses(program_t* program, FILE* file) {
   char line[MAX_LINE_LENGTH];
+  uint16_t current_address = 0;
 
   while (fgets(line, sizeof(line), file)) {
     clean_line(line);
@@ -32,9 +33,7 @@ void first_pass(program_t* program, FILE* file) {
     if (strstr(line, ".ORIG")) {
       char* token = strtok(line, " \t");
       token = strtok(NULL, " \t");
-      if (token) {
-        program->current_address = parse_number(token);
-      }
+      if (token) current_address = parse_number(token);
       continue;
     }
 
@@ -47,25 +46,23 @@ void first_pass(program_t* program, FILE* file) {
     char* colon = strchr(line, ':');
     if (colon) {
       *colon = '\0';  // Remove colon
-      program_add_label(program, line);
+      program_add_address(program, line, current_address);
 
       // Check if there's an instruction on the same line
       char* rest = colon + 1;
       clean_line(rest);
-      if (strlen(rest) > 0) {
-        program->current_address++;
-      }
+      if (strlen(rest) > 0) current_address++;
     } else {
       // Regular instruction
-      program->current_address++;
+      current_address++;
     }
   }
 }
 
 // Second pass: generate machine code
-void second_pass(program_t* program, FILE* file) {
+void parse_instructions(program_t* program, FILE* file) {
   char line[MAX_LINE_LENGTH];
-  program->current_address = 0x3000;  // Reset address
+  uint16_t current_address;
 
   rewind(file);
 
@@ -78,7 +75,8 @@ void second_pass(program_t* program, FILE* file) {
       char* token = strtok(line, " \t");
       token = strtok(NULL, " \t");
       if (token) {
-        program->current_address = parse_number(token);
+        current_address = parse_number(token);
+        program_set_origin(program, current_address);
       }
       continue;
     }
@@ -107,14 +105,10 @@ void second_pass(program_t* program, FILE* file) {
     uint16_t instruction = parse_instruction(line_copy);
 
     if (instruction != 0) {
-      program->instructions[program->instruction_count].address =
-          program->current_address;
-      program->instructions[program->instruction_count].instruction =
-          instruction;
-      program->instruction_count++;
+      program_add_instruction(program, instruction, current_address);
     }
 
-    program->current_address++;
+    current_address++;
   }
 }
 
@@ -168,15 +162,16 @@ int asm_run(const char* input_filename) {
   program_t* program = program_create();
 
   // Two-pass assembly
-  printf("Pass 1: Collecting labels...\n");
-  first_pass(program, input_file);
+  printf("Parsing labels...\n");
+  parse_addresses(program, input_file);
 
-  printf("Pass 2: Generating code...\n");
-  second_pass(program, input_file);
+  printf("Parsing instructions...\n");
+  parse_instructions(program, input_file);
 
   fclose(input_file);
 
   // Write output file
+  printf("Writing to file...\n");
   const char* output_filename = asm_get_output_filename(input_filename);
   write_object_file(program, output_filename);
 

@@ -25,12 +25,18 @@ typedef struct {
   int label_count;
   instruction_t instructions[MAX_INSTRUCTIONS];
   int instruction_count;
-  uint16_t current_address;
 } program_t;
 
 program_t* program_create();
 void program_destroy(program_t* program);
-int program_find_label(program_t* program, const char* label_name);
-void program_add_label(program_t* program, const char* name);
+
+void program_set_origin(program_t* program, uint16_t origin);
+
+void program_add_address(program_t* program, const char* name,
+                         const uint16_t address);
+int program_find_address(program_t* program, const char* label_name);
+
+void program_add_instruction(program_t* program, uint16_t instruction,
+                             uint16_t address);
 
 #endif  // PROGRAM_H
