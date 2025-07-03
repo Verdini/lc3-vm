@@ -12,6 +12,8 @@
 #include <sys/types.h>
 #include <unistd.h>
 
+#include "../../include/vm/vm_exec.h"
+
 uint16_t swap16(uint16_t val) { return (val << 8) | (val >> 8); }
 
 uint16_t vm_mem_read(vm_t* vm, uint16_t address) {
