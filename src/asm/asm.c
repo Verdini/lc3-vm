@@ -132,12 +132,8 @@ int asm_run(const char* input_filename) {
     return 1;
   }
 
-  printf("Assembling %s...\n", input_filename);
-
-  // Reset global state
   program_t* program = program_create();
 
-  // Two-pass assembly
   printf("Parsing labels...\n");
   parse_addresses(program, input_file);
 
@@ -146,13 +142,10 @@ int asm_run(const char* input_filename) {
 
   fclose(input_file);
 
-  // Write output file
   printf("Writing to file...\n");
   const char* output_filename = asm_get_output_filename(input_filename);
   program_write_file(program, output_filename);
 
   program_destroy(program);
-
-  printf("Assembly complete!\n");
   return 0;
 }

@@ -8,12 +8,20 @@ OBJDIR = obj
 BINDIR = bin
 DEBUG_BINDIR = $(BINDIR)/debug
 RELEASE_BINDIR = $(BINDIR)/release
+TESTDIR = test
 
 # Find all .c files in src directory and subdirectories
 SOURCES = $(shell find $(SRCDIR) -name "*.c")
 OBJECTS = $(SOURCES:$(SRCDIR)/%.c=$(OBJDIR)/%.o)
 DEBUG_OBJECTS = $(SOURCES:$(SRCDIR)/%.c=$(OBJDIR)/debug/%.o)
 RELEASE_OBJECTS = $(SOURCES:$(SRCDIR)/%.c=$(OBJDIR)/release/%.o)
+
+# Test sources (excluding main.c)
+VM_SOURCES = $(filter-out $(SRCDIR)/main.c, $(shell find $(SRCDIR) -name "*.c"))
+VM_TEST_OBJECTS = $(VM_SOURCES:$(SRCDIR)/%.c=$(OBJDIR)/debug/%.o)
+
+# Combined test file
+TEST_SRC = $(TESTDIR)/test.c
 
 # Default target
 all: debug
@@ -55,6 +63,14 @@ $(DEBUG_BINDIR):
 $(RELEASE_BINDIR):
 	mkdir -p $(RELEASE_BINDIR)
 
+# Test executable
+$(DEBUG_BINDIR)/test: $(VM_TEST_OBJECTS) $(TEST_SRC) | $(DEBUG_BINDIR)
+	$(CC) $(CFLAGS) $(VM_TEST_OBJECTS) $(TEST_SRC) -o $@
+
+# Run tests
+test: $(DEBUG_BINDIR)/test
+	$(DEBUG_BINDIR)/test
+
 # Install dependencies
 install-deps:
 	sudo apt update
@@ -66,11 +82,7 @@ clean:
 
 # Format code
 format:
-	find $(SRCDIR) include examples -name "*.c" -o -name "*.h" | xargs clang-format -i --style=Google
-
-# Run tests (if you add them later)
-test: debug
-	@echo "No tests configured yet"
+	find $(SRCDIR) include examples $(TESTDIR) -name "*.c" -o -name "*.h" | xargs clang-format -i --style=Google
 
 # Run with valgrind
 valgrind: debug
