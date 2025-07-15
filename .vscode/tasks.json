@@ -28,6 +28,18 @@
             },
         },
         {
+            "label": "[Debug] Run current obj file",
+            "type": "shell",
+            "command": "bin/debug/lc3_vm",
+            "args": [
+                "${relativeFile}"
+            ],
+            "group": "test",
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+        },
+        {
             "label": "[Debug] Compile and run current C file",
             "type": "shell",
             "command": "gcc",

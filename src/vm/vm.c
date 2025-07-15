@@ -61,8 +61,8 @@ vm_t* vm_init(const char* filename) {
 
   fclose(file);
 
-  printf("Program loaded at origin 0x%04X\n", origin);
-  return 0;
+  printf("Program loaded at origin 0x%04X\n\n", origin);
+  return vm;
 }
 
 int vm_run(const char* filename) {
@@ -127,7 +127,7 @@ int vm_run(const char* filename) {
       case LC3_OP_RES:
       case LC3_OP_RTI:
       default:
-        printf("Unknown opcode: 0x%04X\n", op);
+        printf("> Unknown opcode: 0x%04X\n", op);
         vm->running = false;
         result = 1;
         break;

@@ -57,108 +57,200 @@ void vm_exec_add(vm_t* vm, uint16_t instr) {
 }
 
 void vm_exec_and(vm_t* vm, uint16_t instr) {
-  // TODO: Implement AND instruction
-  printf("AND instruction not implemented yet\n");
-  vm->running = false;
+  uint16_t r0 = DR(instr);
+  uint16_t r1 = SR1(instr);
+  uint16_t imm_flag = IMFLAG(instr);
+
+  if (imm_flag) {
+    uint16_t imm5 = SIGN_EXTEND(IMM5(instr), 5);
+    vm->reg[r0] = vm->reg[r1] & imm5;
+  } else {
+    uint16_t r2 = SR2(instr);
+    vm->reg[r0] = vm->reg[r1] & vm->reg[r2];
+  }
+
+  vm_update_flags(vm, r0);
 }
 
 void vm_exec_not(vm_t* vm, uint16_t instr) {
-  // TODO: Implement NOT instruction
-  printf("NOT instruction not implemented yet\n");
-  vm->running = false;
+  uint16_t dr = DR(instr);
+  uint16_t sr = SR1(instr);
+
+  // Perform bitwise NOT operation
+  vm->reg[dr] = ~vm->reg[sr];
+
+  vm_update_flags(vm, dr);
 }
 
 void vm_exec_br(vm_t* vm, uint16_t instr) {
-  // TODO: Implement BR instruction
-  printf("BR instruction not implemented yet\n");
-  vm->running = false;
+  uint16_t n_flag = (instr >> 11) & 0x1;               // Negative flag
+  uint16_t z_flag = (instr >> 10) & 0x1;               // Zero flag
+  uint16_t p_flag = (instr >> 9) & 0x1;                // Positive flag
+  uint16_t pc_offset = SIGN_EXTEND(instr & 0x1FF, 9);  // PC offset
+
+  if ((n_flag && (vm->reg[LC3_R_COND] == LC3_FL_NEG)) ||
+      (z_flag && (vm->reg[LC3_R_COND] == LC3_FL_ZRO)) ||
+      (p_flag && (vm->reg[LC3_R_COND] == LC3_FL_POS))) {
+    vm->reg[LC3_R_PC] += pc_offset;
+  }
 }
 
 void vm_exec_jmp(vm_t* vm, uint16_t instr) {
-  // TODO: Implement JMP instruction
-  printf("JMP instruction not implemented yet\n");
-  vm->running = false;
+  uint16_t base_r = SR1(instr);
+
+  // Set the PC to the value in the base register
+  vm->reg[LC3_R_PC] = vm->reg[base_r];
+
+  vm_update_flags(vm, LC3_R_PC);
 }
 
 void vm_exec_jsr(vm_t* vm, uint16_t instr) {
-  // TODO: Implement JSR instruction
-  printf("JSR instruction not implemented yet\n");
-  vm->running = false;
+  uint16_t pc_offset = SIGN_EXTEND(instr & 0x7FF, 11);  // PC offset
+  uint16_t long_flag = (instr >> 11) & 0x1;             // Long flag
+
+  // Save the current PC to R7
+  vm->reg[LC3_R_R7] = vm->reg[LC3_R_PC];
+
+  if (long_flag) {
+    // JSR instruction with PC offset
+    vm->reg[LC3_R_PC] += pc_offset;
+  } else {
+    // JSRR instruction, using base register
+    uint16_t base_r = SR1(instr);
+    vm->reg[LC3_R_PC] = vm->reg[base_r];
+  }
+
+  vm_update_flags(vm, LC3_R_PC);
 }
 
 void vm_exec_ld(vm_t* vm, uint16_t instr) {
-  // TODO: Implement LD instruction
-  printf("LD instruction not implemented yet\n");
-  vm->running = false;
+  uint16_t r0 = DR(instr);
+  uint16_t pc_offset = SIGN_EXTEND(instr & 0x1FF, 9);  // PC offset
+
+  // Load the value from memory at the calculated address
+  vm->reg[r0] = vm->memory[vm->reg[LC3_R_PC] + pc_offset];
+
+  // Update flags based on the loaded value
+  vm_update_flags(vm, r0);
 }
 
 void vm_exec_ldi(vm_t* vm, uint16_t instr) {
-  // TODO: Implement LDI instruction
-  printf("LDI instruction not implemented yet\n");
-  vm->running = false;
+  uint16_t r0 = DR(instr);
+  uint16_t pc_offset = SIGN_EXTEND(instr & 0x1FF, 9);  // PC offset
+
+  // Load the address from memory at the calculated address
+  uint16_t address = vm->reg[LC3_R_PC] + pc_offset;
+  uint16_t value = vm->memory[address];
+
+  // Load the value from the address stored in memory
+  vm->reg[r0] = vm->memory[value];
+
+  vm_update_flags(vm, r0);
 }
 
 void vm_exec_ldr(vm_t* vm, uint16_t instr) {
-  // TODO: Implement LDR instruction
-  printf("LDR instruction not implemented yet\n");
-  vm->running = false;
+  uint16_t r0 = DR(instr);
+  uint16_t r1 = SR1(instr);
+  uint16_t offset = SIGN_EXTEND(instr & 0x3F, 6);  // Offset
+
+  // Load the value from memory at the address calculated using base register
+  // and offset
+  vm->reg[r0] = vm->memory[vm->reg[r1] + offset];
+
+  vm_update_flags(vm, r0);
 }
 
 void vm_exec_lea(vm_t* vm, uint16_t instr) {
-  // TODO: Implement LEA instruction
-  printf("LEA instruction not implemented yet\n");
-  vm->running = false;
+  uint16_t r0 = DR(instr);
+  uint16_t pc_offset = SIGN_EXTEND(instr & 0x1FF, 9);  // PC offset
+
+  // Load the effective address into the register
+  vm->reg[r0] = vm->reg[LC3_R_PC] + pc_offset;
+
+  vm_update_flags(vm, r0);
 }
 
 void vm_exec_st(vm_t* vm, uint16_t instr) {
-  // TODO: Implement ST instruction
-  printf("ST instruction not implemented yet\n");
-  vm->running = false;
+  uint16_t r0 = DR(instr);
+  uint16_t pc_offset = SIGN_EXTEND(instr & 0x1FF, 9);  // PC offset
+
+  // Store the value from the register into memory at the calculated address
+  vm->memory[vm->reg[LC3_R_PC] + pc_offset] = vm->reg[r0];
+
+  vm_update_flags(vm, r0);
 }
 
 void vm_exec_sti(vm_t* vm, uint16_t instr) {
-  // TODO: Implement STI instruction
-  printf("STI instruction not implemented yet\n");
-  vm->running = false;
+  uint16_t r0 = DR(instr);
+  uint16_t pc_offset = SIGN_EXTEND(instr & 0x1FF, 9);  // PC offset
+
+  // Load the address from memory at the calculated address
+  uint16_t address = vm->reg[LC3_R_PC] + pc_offset;
+
+  // Store the value from the register into memory at the address stored in
+  // memory
+  vm->memory[vm->memory[address]] = vm->reg[r0];
+
+  vm_update_flags(vm, r0);
 }
 
 void vm_exec_str(vm_t* vm, uint16_t instr) {
-  // TODO: Implement STR instruction
-  printf("STR instruction not implemented yet\n");
-  vm->running = false;
+  uint16_t r0 = DR(instr);
+  uint16_t r1 = SR1(instr);
+  uint16_t offset = SIGN_EXTEND(instr & 0x3F, 6);  // Offset
+
+  // Store the value from the register into memory at the address calculated
+  // using base register and offset
+  vm->memory[vm->reg[r1] + offset] = vm->reg[r0];
+
+  vm_update_flags(vm, r0);
 }
 
 void vm_exec_trap(vm_t* vm, uint16_t instr) {
   uint16_t trap_vect = instr & 0xFF;
 
   switch (trap_vect) {
-    case LC3_TRAP_GETC:
-      // TODO: Implement GETC trap
-      printf("GETC trap not implemented yet\n");
-      vm->running = false;
+    case LC3_TRAP_GETC:  // Get character from keyboard, not echoed
+      vm->reg[LC3_R_R0] = (uint16_t)getchar();
       break;
-    case LC3_TRAP_OUT:
-      // TODO: Implement OUT trap
-      printf("OUT trap not implemented yet\n");
-      vm->running = false;
+
+    case LC3_TRAP_OUT:  // x21: Output a character
+      putchar((char)vm->reg[LC3_R_R0]);
+      fflush(stdout);
       break;
-    case LC3_TRAP_PUTS:
-      // TODO: Implement PUTS trap
-      printf("PUTS trap not implemented yet\n");
-      vm->running = false;
-      break;
-    case LC3_TRAP_IN:
-      // TODO: Implement IN trap
-      printf("IN trap not implemented yet\n");
-      vm->running = false;
-      break;
-    case LC3_TRAP_PUTSP:
-      // TODO: Implement PUTSP trap
-      printf("PUTSP trap not implemented yet\n");
-      vm->running = false;
-      break;
+
+    case LC3_TRAP_PUTS:  // Output a string
+    {
+      uint16_t addr = vm->reg[LC3_R_R0];
+      char c;
+      while ((c = (char)vm->memory[addr]) != 0) {
+        putchar(c);
+        addr++;
+      }
+      fflush(stdout);
+    } break;
+
+    case LC3_TRAP_IN:  // Input a character and echo it
+    {
+      vm->reg[LC3_R_R0] = (uint16_t)getchar();
+      putchar((char)vm->reg[LC3_R_R0]);
+      fflush(stdout);
+    } break;
+
+    case LC3_TRAP_PUTSP:  // Output a string of bytes (two chars per word)
+    {
+      uint16_t addr = vm->reg[LC3_R_R0];
+      uint16_t word;
+      while ((word = vm->memory[addr]) != 0) {
+        char c1 = word & 0xFF;
+        putchar(c1);
+        char c2 = word >> 8;
+        if (c2) putchar(c2);  // Only print the second char if it's not null
+        addr++;
+      }
+      fflush(stdout);
+    } break;
     case LC3_TRAP_HALT:
-      printf("HALT\n");
       vm->running = false;
       break;
     default:
