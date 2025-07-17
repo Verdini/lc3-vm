@@ -3,7 +3,33 @@
 #include <string.h>
 
 #include "../include/asm/asm.h"
+#include "../include/asm/symbol.h"
 #include "../include/vm/vm.h"
+
+char* change_filename_extension(const char* filename, const char* new_extension) {
+  char* new_filename = malloc(strlen(filename) + strlen(new_extension) + 1);
+  strcpy(new_filename, filename);
+  char* dot = strrchr(new_filename, '.');
+  if (dot) {
+    strcpy(dot, new_extension);
+  }
+  return new_filename;
+}
+
+int run_assembler_symbols(const char* input_filename) {
+  printf("LC-3 Assembler Symbols\n");
+  symbol_table_t* symbols = symbol_parse_file(input_filename);
+
+  if (symbols == NULL) {
+    fprintf(stderr, "Assembly symbol generation failed!\n");
+    return 1;
+  }
+
+  printf("Assembly symbol generation completed successfully!\n");
+  char* symbols_filename = change_filename_extension(input_filename, ".sym");
+  symbol_table_write_file(symbols, symbols_filename);
+  return 0;
+}
 
 int run_assembler(const char* input_filename) {
   printf("LC-3 Assembler\n");
@@ -13,6 +39,7 @@ int run_assembler(const char* input_filename) {
     return result;
   }
   printf("Assembly completed successfully!\n");
+  return 0;
 }
 
 int run_vm(const char* program_filename) {
@@ -34,6 +61,10 @@ int run_assembler_vm(const char* input_filename) {
 }
 
 int main(int argc, char* argv[]) {
+  // Assembler symbol mode generation: lc3_vm -s <input.asm>
+  if (argc == 3 && strcmp(argv[1], "-s") == 0) {
+    return run_assembler_symbols(argv[2]);
+  }
   // Assembler mode: lc3_vm -c <input.asm>
   if (argc == 3 && strcmp(argv[1], "-c") == 0) {
     return run_assembler(argv[2]);
