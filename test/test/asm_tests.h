@@ -9,7 +9,7 @@
 #include "../../include/asm/program.h"
 #include "../test_framework.h"
 
-// Test parsing of labels
+// Test parsing of symbols
 static char *test_asm_label_parsing(void) {
   // This test would depend on your specific implementation
   // Placeholder for now

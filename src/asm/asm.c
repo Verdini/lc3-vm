@@ -20,8 +20,8 @@ void clean_line(char* line) {
   }
 }
 
-// First pass: collect labels and calculate addresses
-void parse_addresses(program_t* program, FILE* file) {
+// First pass: collect symbols and calculate addresses
+void parse_symbols(program_t* program, FILE* file) {
   char line[MAX_LINE_LENGTH];
   uint16_t current_address = 0;
 
@@ -46,7 +46,7 @@ void parse_addresses(program_t* program, FILE* file) {
     char* colon = strchr(line, ':');
     if (colon) {
       *colon = '\0';  // Remove colon
-      program_add_address(program, line, current_address);
+      program_add_symbol(program, line, current_address);
 
       // Check if there's an instruction on the same line
       char* rest = colon + 1;
@@ -86,7 +86,7 @@ void parse_instructions(program_t* program, FILE* file) {
       break;
     }
 
-    // Handle labels
+    // Handle symbols
     char* colon = strchr(line, ':');
     if (colon) {
       char* rest = colon + 1;
@@ -134,8 +134,8 @@ int asm_run(const char* input_filename) {
 
   program_t* program = program_create();
 
-  printf("Parsing labels...\n");
-  parse_addresses(program, input_file);
+  printf("Parsing symbols...\n");
+  parse_symbols(program, input_file);
 
   printf("Parsing instructions...\n");
   parse_instructions(program, input_file);
