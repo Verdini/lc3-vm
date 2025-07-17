@@ -1,8 +1,9 @@
 #include "../../include/asm/symbol.h"
+
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <stdbool.h>
 
 symbol_table_t* symbol_table_create(void) {
   symbol_table_t* symbol_table = malloc(sizeof(symbol_table_t));
@@ -10,12 +11,10 @@ symbol_table_t* symbol_table_create(void) {
   return symbol_table;
 }
 
-void symbol_table_destroy(symbol_table_t* symbol_table) {
-  free(symbol_table);
-}
+void symbol_table_destroy(symbol_table_t* symbol_table) { free(symbol_table); }
 
 void symbol_table_add_symbol(symbol_table_t* symbol_table, const char* name,
-  const uint16_t address) {
+                             const uint16_t address) {
   strncpy(symbol_table->symbols[symbol_table->symbol_count].name, name, 63);
   symbol_table->symbols[symbol_table->symbol_count].name[63] = '\0';
   symbol_table->symbols[symbol_table->symbol_count].address = address;
@@ -23,7 +22,7 @@ void symbol_table_add_symbol(symbol_table_t* symbol_table, const char* name,
 }
 
 uint16_t symbol_table_find_address(symbol_table_t* symbol_table,
-                              const char* label_name) {
+                                   const char* label_name) {
   for (int i = 0; i < symbol_table->symbol_count; i++) {
     if (strcmp(symbol_table->symbols[i].name, label_name) == 0) {
       return symbol_table->symbols[i].address;
@@ -36,7 +35,8 @@ symbol_table_t* symbol_parse_file(const char* filename) {
   symbol_table_t* symbol_table = symbol_table_create();
   FILE* file = fopen(filename, "r");
   if (file == NULL) {
-    fprintf(stderr, "Error: Could not open file %s to read symbols\n", filename);
+    fprintf(stderr, "Error: Could not open file %s to read symbols\n",
+            filename);
     return NULL;
   }
 
@@ -71,7 +71,8 @@ symbol_table_t* symbol_parse_file(const char* filename) {
 
     // Look for labels (identifier followed by space/tab or at start of line)
     char* label_end = trimmed;
-    while (*label_end && *label_end != ' ' && *label_end != '\t' && *label_end != ';') {
+    while (*label_end && *label_end != ' ' && *label_end != '\t' &&
+           *label_end != ';') {
       label_end++;
     }
 
@@ -111,9 +112,11 @@ symbol_table_t* symbol_parse_file(const char* filename) {
       label_name[label_len] = '\0';
 
       // Add to symbol table
-      strncpy(symbol_table->symbols[symbol_table->symbol_count].name, label_name, 63);
+      strncpy(symbol_table->symbols[symbol_table->symbol_count].name,
+              label_name, 63);
       symbol_table->symbols[symbol_table->symbol_count].name[63] = '\0';
-      symbol_table->symbols[symbol_table->symbol_count].address = current_address;
+      symbol_table->symbols[symbol_table->symbol_count].address =
+          current_address;
       symbol_table->symbol_count++;
     }
 
@@ -139,12 +142,12 @@ symbol_table_t* symbol_parse_file(const char* filename) {
         char* str_end = strchr(str_start + 1, '"');
         if (str_end) {
           int str_len = str_end - str_start - 1;
-          current_address += str_len + 1; // +1 for null terminator
+          current_address += str_len + 1;  // +1 for null terminator
         } else {
-          current_address += 1; // Default if malformed
+          current_address += 1;  // Default if malformed
         }
       } else {
-        current_address += 1; // Default if malformed
+        current_address += 1;  // Default if malformed
       }
     } else if (*rest_of_line != '\0' && *rest_of_line != ';') {
       // Regular instruction
@@ -156,14 +159,17 @@ symbol_table_t* symbol_parse_file(const char* filename) {
   return symbol_table;
 }
 
-void symbol_table_write_file(symbol_table_t* symbol_table, const char* filename) {
+void symbol_table_write_file(symbol_table_t* symbol_table,
+                             const char* filename) {
   FILE* file = fopen(filename, "w");
   if (file == NULL) {
-    fprintf(stderr, "Error: Could not open file %s to write symbols\n", filename);
+    fprintf(stderr, "Error: Could not open file %s to write symbols\n",
+            filename);
     return;
   }
   for (int i = 0; i < symbol_table->symbol_count; i++) {
-    fprintf(file, "%s\t%d\n", symbol_table->symbols[i].name, symbol_table->symbols[i].address);
+    fprintf(file, "%s\t%d\n", symbol_table->symbols[i].name,
+            symbol_table->symbols[i].address);
   }
   fclose(file);
 }

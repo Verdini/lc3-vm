@@ -28,6 +28,7 @@ void program_set_origin(program_t* program, uint16_t origin);
 void program_add_instruction(program_t* program, uint16_t instruction,
                              uint16_t address);
 
+program_t* program_parse_file(const char* input_filename);
 void program_write_file(program_t* program, const char* filename);
 
 #endif  // PROGRAM_H

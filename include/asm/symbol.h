@@ -23,9 +23,9 @@ void symbol_table_destroy(symbol_table_t* symbol_table);
 symbol_table_t* symbol_parse_file(const char* filename);
 
 uint16_t symbol_table_find_address(symbol_table_t* symbol_table,
-                              const char* label_name);
+                                   const char* label_name);
 
-void symbol_table_write_file(symbol_table_t* symbol_table, const char* filename);
-
+void symbol_table_write_file(symbol_table_t* symbol_table,
+                             const char* filename);
 
 #endif  // SYMBOL_H

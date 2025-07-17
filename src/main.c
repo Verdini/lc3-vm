@@ -3,10 +3,10 @@
 #include <string.h>
 
 #include "../include/asm/asm.h"
-#include "../include/asm/symbol.h"
 #include "../include/vm/vm.h"
 
-char* change_filename_extension(const char* filename, const char* new_extension) {
+char* change_filename_extension(const char* filename,
+                                const char* new_extension) {
   char* new_filename = malloc(strlen(filename) + strlen(new_extension) + 1);
   strcpy(new_filename, filename);
   char* dot = strrchr(new_filename, '.');
@@ -18,16 +18,15 @@ char* change_filename_extension(const char* filename, const char* new_extension)
 
 int run_assembler_symbols(const char* input_filename) {
   printf("LC-3 Assembler Symbols\n");
-  symbol_table_t* symbols = symbol_parse_file(input_filename);
-
-  if (symbols == NULL) {
+  char* symbols_filename = change_filename_extension(input_filename, ".sym");
+  int result = asm_symbol_run(input_filename, symbols_filename);
+  if (result != 0) {
     fprintf(stderr, "Assembly symbol generation failed!\n");
-    return 1;
+    return result;
   }
 
   printf("Assembly symbol generation completed successfully!\n");
-  char* symbols_filename = change_filename_extension(input_filename, ".sym");
-  symbol_table_write_file(symbols, symbols_filename);
+  free(symbols_filename);
   return 0;
 }
 
