@@ -10,7 +10,6 @@
    "LEA",  "TRAP",  "GETC", "OUT",   "PUTS",  "IN",      "PUTSP", \
    "HALT", ".ORIG", ".END", ".FILL", ".BLKW", ".STRINGZ"}
 
-char* asm_get_output_filename(const char* input_filename);
-int asm_run(const char* input_filename);
+int asm_run(const char* input_filename, const char* output_filename);
 
 #endif  // ASM_H

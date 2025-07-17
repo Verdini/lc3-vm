@@ -33,12 +33,16 @@ int run_assembler_symbols(const char* input_filename) {
 
 int run_assembler(const char* input_filename) {
   printf("LC-3 Assembler\n");
-  int result = asm_run(input_filename);
+  char* obj_filename = change_filename_extension(input_filename, ".obj");
+  int result = asm_run(input_filename, obj_filename);
+
   if (result != 0) {
     fprintf(stderr, "Assembly failed!\n");
     return result;
   }
+
   printf("Assembly completed successfully!\n");
+  free(obj_filename);
   return 0;
 }
 
@@ -54,7 +58,7 @@ int run_assembler_vm(const char* input_filename) {
     return result;
   }
 
-  char* obj_filename = asm_get_output_filename(input_filename);
+  char* obj_filename = change_filename_extension(input_filename, ".obj");
   result = run_vm(obj_filename);
   free(obj_filename);
   return result;
