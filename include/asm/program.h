@@ -3,8 +3,9 @@
 
 #include <stdint.h>
 
+#include "symbol.h"
+
 #define MAX_LINE_LENGTH 256
-#define MAX_SYMBOLS 100
 #define MAX_INSTRUCTIONS 1000
 
 // Instruction structure
@@ -19,16 +20,9 @@ typedef struct {
   int instruction_count;
 } program_t;
 
-program_t* program_create();
-
+program_t* program_create(const char* input_filename, symbol_table_t* symbols);
 void program_destroy(program_t* program);
 
-void program_set_origin(program_t* program, uint16_t origin);
-
-void program_add_instruction(program_t* program, uint16_t instruction,
-                             uint16_t address);
-
-program_t* program_parse_file(const char* input_filename);
 void program_write_file(program_t* program, const char* filename);
 
 #endif  // PROGRAM_H
