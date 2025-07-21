@@ -11,6 +11,7 @@ make install-deps
 ```
 
 Or manually install:
+
 ```bash
 sudo apt update
 sudo apt install -y build-essential gdb valgrind clang-format
@@ -19,11 +20,13 @@ sudo apt install -y build-essential gdb valgrind clang-format
 ## Building
 
 ### Quick Build (Debug)
+
 ```bash
 make
 ```
 
 ### Build Options
+
 ```bash
 make debug    # Build with debug symbols
 make release  # Build optimized release version
@@ -34,15 +37,16 @@ make clean    # Clean build artifacts
 
 ```bash
 # Run debug version
-./bin/debug/lc3_vm examples/hello.obj
+./bin/debug/lc3 examples/hello.obj
 
 # Run release version
-./bin/release/lc3_vm examples/hello.obj
+./bin/release/lc3 examples/hello.obj
 ```
 
 ## Development Workflow
 
 ### VS Code Tasks
+
 - **Ctrl+Shift+P** → "Tasks: Run Task"
   - `Build Debug` - Build current file for debugging
   - `Build Release` - Build optimized version
@@ -51,6 +55,7 @@ make clean    # Clean build artifacts
   - `Run with Valgrind` - Memory leak detection
 
 ### Debugging
+
 - **F5** - Start debugging current file
 - Set breakpoints by clicking left of line numbers
 - Debug configurations available:
@@ -58,11 +63,13 @@ make clean    # Clean build artifacts
   - `Debug LC3 VM` - Debug the main VM with example program
 
 ### Code Formatting
+
 ```bash
 make format    # Format all source files
 ```
 
 ### Memory Leak Detection
+
 ```bash
 make valgrind  # Run with Valgrind
 ```
@@ -86,11 +93,13 @@ lc3-vm/
 ## Compiler Flags
 
 ### Debug Build
+
 - `-g` - Debug symbols
 - `-Wall -Wextra -Wpedantic` - Comprehensive warnings
 - `-std=c17` - C17 standard
 
 ### Release Build
+
 - `-O2` - Optimization level 2
 - `-DNDEBUG` - Disable debug assertions
 

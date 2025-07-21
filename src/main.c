@@ -64,15 +64,15 @@ int run_assembler_vm(const char* input_filename) {
 }
 
 int main(int argc, char* argv[]) {
-  // Assembler symbol mode generation: lc3_vm -s <input.asm>
+  // Assembler symbol mode generation: lc3 -s <input.asm>
   if (argc == 3 && strcmp(argv[1], "-s") == 0) {
     return run_assembler_symbols(argv[2]);
   }
-  // Assembler mode: lc3_vm -c <input.asm>
+  // Assembler mode: lc3 -c <input.asm>
   if (argc == 3 && strcmp(argv[1], "-c") == 0) {
     return run_assembler(argv[2]);
   }
-  // Assemble and run: lc3_vm -r <input.asm>
+  // Assemble and run: lc3 -r <input.asm>
   else if (argc == 3 && strcmp(argv[1], "-r") == 0) {
     return run_assembler_vm(argv[2]);
   }

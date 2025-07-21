@@ -2,9 +2,22 @@
     "version": "2.0.0",
     "tasks": [
         {
+            "label": "[Debug] Generate symbols for current asm file",
+            "type": "shell",
+            "command": "bin/debug/lc3",
+            "args": [
+                "-s",
+                "${relativeFile}"
+            ],
+            "group": "test",
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+        },
+        {
             "label": "[Debug] Compile current asm file",
             "type": "shell",
-            "command": "bin/debug/lc3_vm",
+            "command": "bin/debug/lc3",
             "args": [
                 "-c",
                 "${relativeFile}"
@@ -17,7 +30,7 @@
         {
             "label": "[Debug] Run current asm file",
             "type": "shell",
-            "command": "bin/debug/lc3_vm",
+            "command": "bin/debug/lc3",
             "args": [
                 "-r",
                 "${relativeFile}"
@@ -30,7 +43,7 @@
         {
             "label": "[Debug] Run current obj file",
             "type": "shell",
-            "command": "bin/debug/lc3_vm",
+            "command": "bin/debug/lc3",
             "args": [
                 "${relativeFile}"
             ],

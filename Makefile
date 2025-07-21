@@ -2,7 +2,7 @@
 CC = gcc
 CFLAGS = -Wall -Wextra -Wpedantic -std=c17 -g
 RELEASE_FLAGS = -O2 -DNDEBUG
-TARGET = lc3_vm
+TARGET = lc3
 SRCDIR = src
 OBJDIR = obj
 BINDIR = bin

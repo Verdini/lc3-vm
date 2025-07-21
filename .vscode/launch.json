@@ -17,7 +17,7 @@
             "name": "Debug LC3 VM",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/bin/debug/lc3_vm",
+            "program": "${workspaceFolder}/bin/debug/lc3",
             "args": [
                 "examples/hello.obj"
             ],
