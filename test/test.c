@@ -5,7 +5,7 @@
 #include "test_framework.h"
 
 int main(void) {
-  printf("=== RUNNING LC-3 VM TESTS ===\n\n");
+  printf("=== RUNNING LC-3 VM AND ASSEMBLER TESTS ===\n\n");
 
   run_vm_tests();
   run_asm_tests();

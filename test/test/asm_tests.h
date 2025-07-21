@@ -5,7 +5,6 @@
 #include <stdio.h>
 
 #include "../../include/asm/asm.h"
-#include "../../include/asm/parser.h"
 #include "../../include/asm/program.h"
 #include "../test_framework.h"
 
